@@ -1,47 +1,48 @@
 package com.practice.java.atm.transaction;
 
+// Controller class that acts as an interface between the user and the ATM services
 public class ATMController {
 
-	/*
-	 * private int customer_id; private String password;
-	 */
-	private ATMProvidedServices ATMService;
-	/*
-	 * public ATMController(int customer_id,String password) {
-	 * 
-	 * this.customer_id = customer_id; this.password = password; }
-	 */
+    // Reference to the ATM service interface to access various ATM functionalities
+    private ATMProvidedServices ATMService;
 
-	public void setATMService(ATMProvidedServices ATMService) {
-		this.ATMService = ATMService;
-	}
+    // Setter method to inject an implementation of ATMProvidedServices
+    public void setATMService(ATMProvidedServices ATMService) {
+        this.ATMService = ATMService;
+    }
 
-	public void userVerification(int customer_id, String password) {
-		/*
-		 * if (ATMService != null) {
-		 * System.out.println("Verifying user with ID: " + customer_id +
-		 * " and Password: " + password); // Debug statement
-		 * ATMService.userDetails(customer_id, password); } else {
-		 * System.out.println("ATMService is not initialized."); }
-		 */
-		ATMService.userDetails(customer_id, password);
-	}
+    /**
+     * Verifies the user by delegating the request to the ATM service's userDetails method.
+     * @param customer_id - The user's customer ID
+     * @param password - The user's password
+     */
+    public void userVerification(int customer_id, String password) {
+        ATMService.userDetails(customer_id, password);
+    }
 
-	public void balanceInfo() {
-		ATMService.balanceEnquiry();
+    // Retrieves and displays the user's current balance by calling the balanceEnquiry method
+    public void balanceInfo() {
+        ATMService.balanceEnquiry();
+    }
 
-	}
+    /**
+     * Deposits a specified amount to the user's account by calling the deposit method.
+     * @param amount - The amount to be deposited
+     */
+    public void cashDeposit(double amount) {
+        ATMService.deposit(amount);
+    }
 
-	public void cashDeposit(double amount) {
-		ATMService.deposit(amount);
-	}
+    /**
+     * Withdraws a specified amount from the user's account by calling the withdrawal method.
+     * @param amount - The amount to be withdrawn
+     */
+    public void withDrawCash(double amount) {
+        ATMService.withdrawal(amount);
+    }
 
-	public void withDrawCash(double amount) {
-		ATMService.withdrawal(amount);
-	}
-	
-	public void viewMiniStatement(){
-		ATMService.viewMiniStatement();
-	}
-
+    // Displays the user's mini-statement by calling the viewMiniStatement method
+    public void viewMiniStatement(){
+        ATMService.viewMiniStatement();
+    }
 }
