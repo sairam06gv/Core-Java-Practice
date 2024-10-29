@@ -5,73 +5,79 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+// Service implementation class that provides ATM functionalities
 public class ServiceImpl implements ATMProvidedServices {
 
-	ATMDto atm = new ATMDto();
+    // Instance of ATM data object to manage balance and user details
+    ATMDto atm = new ATMDto();
 
-	Map<String, Double> miniStatement = new HashMap<>();
-	
+    // Stores a mini-statement of recent transactions with timestamps and amounts
+    Map<String, Double> miniStatement = new HashMap<>();
 
-	@Override
-	public void balanceEnquiry() {
+    // Displays the current balance of the user's account
+    @Override
+    public void balanceEnquiry() {
+        System.out.println("Current Balance : " + atm.getBalance());
+    }
 
-		System.out.println("Current Balance : " + atm.getBalance());
+    // Deposits a specified amount to the user's account and records the transaction in the mini-statement
+    @Override
+    public void deposit(double amount) {
+        atm.setBalance(atm.getBalance() + amount);
+        System.out.println("Deposit is successful. Deposit Amount : " + amount);
+        
+        // Records transaction with current time and deposit amount
+        String transactiontime = "Transaction time: " + getCurrentTime() + ". Deposit amount  -> ";
+        miniStatement.put(transactiontime, amount);
+        
+        // Display updated balance
+        balanceEnquiry();
+    }
 
-	}
+    // Displays a mini-statement showing recent transactions
+    @Override
+    public void viewMiniStatement() {
+        for (Map.Entry<String, Double> entry : miniStatement.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        }
+    }
 
-	@Override
-	public void deposit(double amount) {
+    // Withdraws a specified amount if sufficient balance is available, otherwise displays an error message
+    @Override
+    public void withdrawal(double amount) {
+        if (atm.getBalance() >= amount) {
+            // Records transaction with current time and withdrawal amount
+            String transactiontime = "Transaction time: " + getCurrentTime() + ". Withdrawal amount-> ";
+            miniStatement.put(transactiontime, amount);
+            
+            // Updates balance after withdrawal
+            atm.setBalance(atm.getBalance() - amount);
+            System.out.println(amount + " is withdrawn.");
+            
+            // Display updated balance
+            balanceEnquiry();
+        } else {
+            System.out.println("Insufficient Balance");
+            balanceEnquiry();
+        }
+    }
 
-		atm.setBalance(atm.getBalance() + amount);
-		System.out.println("Deposit is successful. Deposit Amount : " + amount);
-		String transactiontime ="Transaction time: " + getCurrentTime() + ". Deposit amount  -> ";
-		miniStatement.put(transactiontime, amount);                          
-		balanceEnquiry();
+    // Helper method to get the current date and time as a formatted string
+    private String getCurrentTime() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
 
-	}
-	
-	@Override
-	public void viewMiniStatement() {
-		for (Map.Entry<String, Double> entry : miniStatement.entrySet()) {
-			System.out.println(entry.getKey() + " " + entry.getValue());
-		}
-	}
-	
-	@Override
-	public void withdrawal(double amount) {
+    // Verifies user details by comparing input customer ID and password to stored values
+    public void userDetails(int customer_id, String password) {
+        int id = 123;  // Sample customer ID
+        String pwd = "hello";  // Sample password
 
-		if (atm.getBalance() >= amount) {
-			
-			String transactiontime ="Transaction time: " + getCurrentTime() + ". Withdrwal amount-> ";
-			miniStatement.put(transactiontime, amount);
-			atm.setBalance(atm.getBalance() - amount);
-			System.out.println(amount + " is withdrawed.");
-			balanceEnquiry();
-		} else {
-			System.out.println("Insufficient Balance");
-			balanceEnquiry();
-		}
-
-	}
-	
-	private String getCurrentTime() {
-	    return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-	}
-
-	public void userDetails(int customer_id, String password) {
-		int id = 123;
-		String pwd = "hello";
-		// System.out.println(customer_id+" "+password);
-
-		if (id == customer_id && pwd.equals(password)) {
-			System.out.println("User verified");
-		} else {
-			System.out.println("Incorrect customerid or password ");
-			System.exit(0);
-		}
-
-	}
-	
-	
-
+        // Checks if input credentials match stored credentials
+        if (id == customer_id && pwd.equals(password)) {
+            System.out.println("User verified");
+        } else {
+            System.out.println("Incorrect customer ID or password");
+            System.exit(0);  // Exits program if credentials are incorrect
+        }
+    }
 }
